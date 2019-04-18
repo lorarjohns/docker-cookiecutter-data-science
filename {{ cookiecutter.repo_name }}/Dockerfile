@@ -1,1 +1,1 @@
-FROM manifoldai/orbyter-ml-dev:1.2
+FROM {{ cookiecutter.base_docker_image  }}
