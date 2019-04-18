@@ -8,7 +8,7 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = {{ cookiecutter.s3_bucket }}
 PROFILE = {{ cookiecutter.aws_profile }}
 PROJECT_NAME = {{ cookiecutter.repo_name }}
-PYTHON_INTERPRETER = "python3"
+PYTHON_INTERPRETER = "python"
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -20,13 +20,8 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
-## Install Python Dependencies
-requirements: test_environment
-	pip install -U pip setuptools wheel
-	pip install -r requirements.txt
-
 ## Make Dataset
-data: requirements
+data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
 ## Delete all compiled Python files
@@ -53,10 +48,6 @@ ifeq (default,$(PROFILE))
 else
 	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
 endif
-
-## Test python environment is setup correctly
-test_environment:
-	$(PYTHON_INTERPRETER) test_environment.py
 
 #################################################################################
 # PROJECT RULES                                                                 #
